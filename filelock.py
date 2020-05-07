@@ -399,7 +399,7 @@ class WindowsFileLock(BaseFileLock):
         try:
             fd = os.open(self._lock_file, open_mode)
         except OSError as err:
-            logger().debug('Failed to acquire lock because %s', err)
+            logger().debug('Failed to acquire lock because %s', str(err))
         else:
             try:
                 self._WINAPI_LOCK_FUNC(msvcrt.get_osfhandle(fd), 0, 0, 1, 0)
@@ -466,8 +466,10 @@ class SoftFileLock(BaseFileLock):
         open_mode = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_TRUNC
         try:
             fd = os.open(self._lock_file, open_mode)
-        except (IOError, OSError) as err:
-            logger().debug('Failed to acquire lock because %s', err)
+        except IOError as err:
+            logger().debug('Failed to acquire lock because %s', str(err))
+        except OSError as err:
+            logger().debug('Failed to acquire lock because %s', str(err))
         else:
             self._lock_file_fd = fd
         return None
