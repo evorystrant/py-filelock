@@ -466,7 +466,7 @@ class SoftFileLock(BaseFileLock):
         open_mode = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_TRUNC
         try:
             fd = os.open(self._lock_file, open_mode)
-        except (IOError, OSError):
+        except (IOError, OSError) as err:
             logger().debug('Failed to acquire lock because %s', err)
         else:
             self._lock_file_fd = fd
